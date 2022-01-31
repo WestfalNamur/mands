@@ -1,10 +1,12 @@
 import type { NextPage } from "next";
 import styles from "../styles/Home.module.css";
 
+import LandingView from "../features/landingView";
+
 const Home: NextPage = () => {
   return (
     <div className={styles.main}>
-      <h1>Hello, World!</h1>
+      <LandingView />
     </div>
   );
 };
