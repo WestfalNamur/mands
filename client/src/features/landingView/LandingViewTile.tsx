@@ -2,6 +2,9 @@ import { useState } from "react";
 import Image from "next/image";
 import { useSpring, animated } from "react-spring";
 
+// TODO
+// https://0xca0a.gumroad.com/l/B4N4N4S
+
 interface Props {
   className: string;
   imgSrc: string;
