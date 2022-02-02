@@ -7,7 +7,7 @@ import (
 	"context"
 )
 
-const addUser = `-- name: AddUser :one
+const addUserData = `-- name: AddUserData :one
 INSERT INTO user_data (
     user_name,
     user_password
@@ -16,13 +16,13 @@ INSERT INTO user_data (
 ) RETURNING id, user_name, user_password
 `
 
-type AddUserParams struct {
+type AddUserDataParams struct {
 	UserName     string `json:"user_name"`
 	UserPassword string `json:"user_password"`
 }
 
-func (q *Queries) AddUser(ctx context.Context, arg AddUserParams) (UserDatum, error) {
-	row := q.queryRow(ctx, q.addUserStmt, addUser, arg.UserName, arg.UserPassword)
+func (q *Queries) AddUserData(ctx context.Context, arg AddUserDataParams) (UserDatum, error) {
+	row := q.queryRow(ctx, q.addUserDataStmt, addUserData, arg.UserName, arg.UserPassword)
 	var i UserDatum
 	err := row.Scan(&i.ID, &i.UserName, &i.UserPassword)
 	return i, err

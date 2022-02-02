@@ -1,4 +1,4 @@
--- name: AddUser :one
+-- name: AddUserData :one
 INSERT INTO user_data (
     user_name,
     user_password
