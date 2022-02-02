@@ -6,7 +6,7 @@ CREATE TABLE "user_data" (
 
 CREATE TABLE "todo" (
   "id" bigserial PRIMARY KEY,
-  "user_id" bigserial,
+  "user_id" bigserial NOT NULL,
   "content_text" TEXT NOT NULL,
   "done" boolean NOT NULL
 );

@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createTodo = `-- name: CreateTodo :one
@@ -19,9 +18,9 @@ INSERT INTO todo (
 `
 
 type CreateTodoParams struct {
-	UserID      sql.NullInt64 `json:"user_id"`
-	ContentText string        `json:"content_text"`
-	Done        bool          `json:"done"`
+	UserID      int64  `json:"user_id"`
+	ContentText string `json:"content_text"`
+	Done        bool   `json:"done"`
 }
 
 func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) (Todo, error) {
@@ -88,10 +87,10 @@ RETURNING id, user_id, content_text, done
 `
 
 type UpdateTodoParams struct {
-	ID          int64         `json:"id"`
-	UserID      sql.NullInt64 `json:"user_id"`
-	ContentText string        `json:"content_text"`
-	Done        bool          `json:"done"`
+	ID          int64  `json:"id"`
+	UserID      int64  `json:"user_id"`
+	ContentText string `json:"content_text"`
+	Done        bool   `json:"done"`
 }
 
 func (q *Queries) UpdateTodo(ctx context.Context, arg UpdateTodoParams) (Todo, error) {

@@ -2,15 +2,13 @@
 
 package db
 
-import (
-	"database/sql"
-)
+import ()
 
 type Todo struct {
-	ID          int64         `json:"id"`
-	UserID      sql.NullInt64 `json:"user_id"`
-	ContentText string        `json:"content_text"`
-	Done        bool          `json:"done"`
+	ID          int64  `json:"id"`
+	UserID      int64  `json:"user_id"`
+	ContentText string `json:"content_text"`
+	Done        bool   `json:"done"`
 }
 
 type UserDatum struct {
