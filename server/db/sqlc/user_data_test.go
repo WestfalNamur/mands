@@ -13,14 +13,10 @@ func TestAddUser(t *testing.T) {
 
 	// Add
 	arg := AddUserParams{
-		UserName:     util.RandomString(12),
-		UserPassword: util.RandomString(12),
+		UserName:     util.RandomString(10),
+		UserPassword: util.RandomString(10),
 	}
 	user, err := testQueries.AddUser(ctx, arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
-
-	// Delete
-	err = testQueries.DeleteTodo(ctx, user.ID)
-	require.NoError(t, err)
 }
