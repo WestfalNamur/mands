@@ -22,11 +22,11 @@ func New(db DBTX) *Queries {
 func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	q := Queries{db: db}
 	var err error
+	if q.addTodoStmt, err = db.PrepareContext(ctx, addTodo); err != nil {
+		return nil, fmt.Errorf("error preparing query AddTodo: %w", err)
+	}
 	if q.addUserDataStmt, err = db.PrepareContext(ctx, addUserData); err != nil {
 		return nil, fmt.Errorf("error preparing query AddUserData: %w", err)
-	}
-	if q.createTodoStmt, err = db.PrepareContext(ctx, createTodo); err != nil {
-		return nil, fmt.Errorf("error preparing query CreateTodo: %w", err)
 	}
 	if q.deleteTodoStmt, err = db.PrepareContext(ctx, deleteTodo); err != nil {
 		return nil, fmt.Errorf("error preparing query DeleteTodo: %w", err)
@@ -51,14 +51,14 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 
 func (q *Queries) Close() error {
 	var err error
+	if q.addTodoStmt != nil {
+		if cerr := q.addTodoStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing addTodoStmt: %w", cerr)
+		}
+	}
 	if q.addUserDataStmt != nil {
 		if cerr := q.addUserDataStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing addUserDataStmt: %w", cerr)
-		}
-	}
-	if q.createTodoStmt != nil {
-		if cerr := q.createTodoStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing createTodoStmt: %w", cerr)
 		}
 	}
 	if q.deleteTodoStmt != nil {
@@ -130,8 +130,8 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 type Queries struct {
 	db                 DBTX
 	tx                 *sql.Tx
+	addTodoStmt        *sql.Stmt
 	addUserDataStmt    *sql.Stmt
-	createTodoStmt     *sql.Stmt
 	deleteTodoStmt     *sql.Stmt
 	deleteUserDataStmt *sql.Stmt
 	getAllTodoStmt     *sql.Stmt
@@ -144,8 +144,8 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
 		db:                 tx,
 		tx:                 tx,
+		addTodoStmt:        q.addTodoStmt,
 		addUserDataStmt:    q.addUserDataStmt,
-		createTodoStmt:     q.createTodoStmt,
 		deleteTodoStmt:     q.deleteTodoStmt,
 		deleteUserDataStmt: q.deleteUserDataStmt,
 		getAllTodoStmt:     q.getAllTodoStmt,

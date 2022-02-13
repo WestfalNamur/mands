@@ -1,4 +1,4 @@
--- name: CreateTodo :one
+-- name: AddTodo :one
 INSERT INTO todo (
     user_id,
     content_text,

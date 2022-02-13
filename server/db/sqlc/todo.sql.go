@@ -7,7 +7,7 @@ import (
 	"context"
 )
 
-const createTodo = `-- name: CreateTodo :one
+const addTodo = `-- name: AddTodo :one
 INSERT INTO todo (
     user_id,
     content_text,
@@ -17,14 +17,14 @@ INSERT INTO todo (
 ) RETURNING id, user_id, content_text, done
 `
 
-type CreateTodoParams struct {
+type AddTodoParams struct {
 	UserID      int64  `json:"user_id"`
 	ContentText string `json:"content_text"`
 	Done        bool   `json:"done"`
 }
 
-func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) (Todo, error) {
-	row := q.queryRow(ctx, q.createTodoStmt, createTodo, arg.UserID, arg.ContentText, arg.Done)
+func (q *Queries) AddTodo(ctx context.Context, arg AddTodoParams) (Todo, error) {
+	row := q.queryRow(ctx, q.addTodoStmt, addTodo, arg.UserID, arg.ContentText, arg.Done)
 	var i Todo
 	err := row.Scan(
 		&i.ID,
