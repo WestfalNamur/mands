@@ -41,3 +41,7 @@ sqlc:
 
 test:
 	go test -v -cover ./...
+
+
+check:
+	staticcheck ./... 
