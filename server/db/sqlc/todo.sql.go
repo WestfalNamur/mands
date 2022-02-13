@@ -77,6 +77,23 @@ func (q *Queries) GetAllTodo(ctx context.Context) ([]Todo, error) {
 	return items, nil
 }
 
+const getTodo = `-- name: GetTodo :one
+SELECT id, user_id, content_text, done FROM todo
+WHERE id = $1
+`
+
+func (q *Queries) GetTodo(ctx context.Context, id int64) (Todo, error) {
+	row := q.queryRow(ctx, q.getTodoStmt, getTodo, id)
+	var i Todo
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.ContentText,
+		&i.Done,
+	)
+	return i, err
+}
+
 const updateTodo = `-- name: UpdateTodo :one
 UPDATE todo
 SET user_id = $2,

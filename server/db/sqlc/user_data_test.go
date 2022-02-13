@@ -14,25 +14,25 @@ func createRandomUser(t *testing.T, ctx context.Context) (UserDatum, error) {
 		UserPassword: util.RandomString(12),
 	}
 	user, err := testQueries.AddUserData(ctx, arg)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, user)
+
 	return user, err
 }
 
 func TestAddUser(t *testing.T) {
 	ctx := context.Background()
 
-	user, err := createRandomUser(t, ctx)
-	require.NoError(t, err)
-	require.NotEmpty(t, user)
+	createRandomUser(t, ctx)
 }
 
 func TestDeleteUser(t *testing.T) {
 	ctx := context.Background()
 
-	user, err := createRandomUser(t, ctx)
-	require.NoError(t, err)
-	require.NotEmpty(t, user)
+	user, _ := createRandomUser(t, ctx)
 
-	err = testQueries.DeleteUserData(ctx, user.ID)
+	err := testQueries.DeleteUserData(ctx, user.ID)
 	require.NoError(t, err)
 }
 

@@ -10,6 +10,10 @@ INSERT INTO todo (
 -- name: GetAllTodo :many
 SELECT * FROM todo;
 
+-- name: GetTodo :one
+SELECT * FROM todo
+WHERE id = $1;
+
 -- name: UpdateTodo :one
 UPDATE todo
 SET user_id = $2,
