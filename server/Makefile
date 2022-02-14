@@ -45,3 +45,6 @@ test:
 
 check:
 	staticcheck ./... 
+
+qc:
+	clear && go test -v -cover ./... && staticcheck ./...
