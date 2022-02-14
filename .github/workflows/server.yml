@@ -1,0 +1,51 @@
+name: ci-server
+
+on:
+  push:
+    branches: [main, server]
+  pull_request:
+    branches: [main]
+
+jobs:
+  core-test:
+    runs-on: ubuntu-latest
+
+    env:
+      working-directory: ./server
+
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_PASSWORD: mands_pw
+          POSTGRES_USER: mands_user
+          POSTGRES_DB: mands_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: Install golang-migrate
+        run: |
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.14.1/migrate.linux-amd64.tar.gz | tar xvz
+          sudo mv migrate.linux-amd64 /usr/bin/migrate
+          which migrate
+
+      - name: Run migrations
+        working-directory: ./server
+        run: make migrateup
+
+      - name: Test
+        working-directory: ./server
+        run: make test
