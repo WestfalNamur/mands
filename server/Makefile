@@ -48,3 +48,6 @@ check:
 
 qc:
 	clear && go test -v -cover ./... && staticcheck ./...
+
+server:
+	go run main.go  # Test locally via "curl http://localhost:8080/ping"
