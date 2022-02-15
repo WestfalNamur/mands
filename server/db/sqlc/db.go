@@ -43,6 +43,9 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.getTodoStmt, err = db.PrepareContext(ctx, getTodo); err != nil {
 		return nil, fmt.Errorf("error preparing query GetTodo: %w", err)
 	}
+	if q.getUserDataStmt, err = db.PrepareContext(ctx, getUserData); err != nil {
+		return nil, fmt.Errorf("error preparing query GetUserData: %w", err)
+	}
 	if q.updateTodoStmt, err = db.PrepareContext(ctx, updateTodo); err != nil {
 		return nil, fmt.Errorf("error preparing query UpdateTodo: %w", err)
 	}
@@ -87,6 +90,11 @@ func (q *Queries) Close() error {
 	if q.getTodoStmt != nil {
 		if cerr := q.getTodoStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing getTodoStmt: %w", cerr)
+		}
+	}
+	if q.getUserDataStmt != nil {
+		if cerr := q.getUserDataStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getUserDataStmt: %w", cerr)
 		}
 	}
 	if q.updateTodoStmt != nil {
@@ -145,6 +153,7 @@ type Queries struct {
 	getAllTodoStmt     *sql.Stmt
 	getAllUserDataStmt *sql.Stmt
 	getTodoStmt        *sql.Stmt
+	getUserDataStmt    *sql.Stmt
 	updateTodoStmt     *sql.Stmt
 	updateUserDataStmt *sql.Stmt
 }
@@ -160,6 +169,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 		getAllTodoStmt:     q.getAllTodoStmt,
 		getAllUserDataStmt: q.getAllUserDataStmt,
 		getTodoStmt:        q.getTodoStmt,
+		getUserDataStmt:    q.getUserDataStmt,
 		updateTodoStmt:     q.updateTodoStmt,
 		updateUserDataStmt: q.updateUserDataStmt,
 	}

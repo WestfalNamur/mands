@@ -21,6 +21,10 @@ func NewServer(store *db.Store) *Server {
 		c.String(http.StatusOK, "pong")
 	})
 
+	// User
+	router.GET("/user/:id", server.getUser)
+	router.GET("/users", server.getAllUser)
+
 	server.router = router
 	return server
 }

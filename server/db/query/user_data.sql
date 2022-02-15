@@ -6,8 +6,15 @@ INSERT INTO user_data (
     $1, $2
 ) RETURNING *;
 
+-- name: GetUserData :one
+SELECT * FROM user_data
+WHERE id = $1;
+
 -- name: GetAllUserData :many
-SELECT * FROM user_data;
+SELECT * FROM user_data
+ORDER BY id
+LIMIT $1
+OFFSET $2;
 
 -- name: UpdateUserData :one
 UPDATE user_data

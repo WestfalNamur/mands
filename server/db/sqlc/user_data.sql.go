@@ -40,10 +40,18 @@ func (q *Queries) DeleteUserData(ctx context.Context, id int64) error {
 
 const getAllUserData = `-- name: GetAllUserData :many
 SELECT id, user_name, user_password FROM user_data
+ORDER BY id
+LIMIT $1
+OFFSET $2
 `
 
-func (q *Queries) GetAllUserData(ctx context.Context) ([]UserDatum, error) {
-	rows, err := q.query(ctx, q.getAllUserDataStmt, getAllUserData)
+type GetAllUserDataParams struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+func (q *Queries) GetAllUserData(ctx context.Context, arg GetAllUserDataParams) ([]UserDatum, error) {
+	rows, err := q.query(ctx, q.getAllUserDataStmt, getAllUserData, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -63,6 +71,18 @@ func (q *Queries) GetAllUserData(ctx context.Context) ([]UserDatum, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const getUserData = `-- name: GetUserData :one
+SELECT id, user_name, user_password FROM user_data
+WHERE id = $1
+`
+
+func (q *Queries) GetUserData(ctx context.Context, id int64) (UserDatum, error) {
+	row := q.queryRow(ctx, q.getUserDataStmt, getUserData, id)
+	var i UserDatum
+	err := row.Scan(&i.ID, &i.UserName, &i.UserPassword)
+	return i, err
 }
 
 const updateUserData = `-- name: UpdateUserData :one
