@@ -4,12 +4,11 @@ import (
 	"database/sql"
 	"log"
 	"server/api"
-	"server/util"
 	db "server/db/sqlc"
+	"server/util"
 
 	_ "github.com/lib/pq" // We do not use any of its function directly.
 )
-
 
 func main() {
 	config, err := util.LoadConfig(".")
