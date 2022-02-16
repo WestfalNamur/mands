@@ -76,7 +76,6 @@ func (server *Server) getAllUser(ctx *gin.Context) {
 		Limit:  req.PageSize,
 		Offset: (req.PageID - 1) * req.PageSize,
 	}
-
 	users, err := server.store.GetAllUserData(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
@@ -84,4 +83,59 @@ func (server *Server) getAllUser(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, users)
+}
+
+type putUserRequest struct {
+	ID           int64  `uri:"id" binding:"required,min=1"`
+	UserName     string `json:"user_name" binding:"required"`
+	UserPassword string `json:"user_password" binding:"required"`
+}
+
+func (server *Server) putAllUser(ctx *gin.Context) {
+	var req putUserRequest
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	arg := db.UpdateUserDataParams{
+		ID:           req.ID,
+		UserName:     req.UserName,
+		UserPassword: req.UserPassword,
+	}
+	user, err := server.store.UpdateUserData(ctx, arg)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, err)
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, user)
+}
+
+type deleteUserRequest struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
+}
+
+func (server *Server) deleteUser(ctx *gin.Context) {
+	var req deleteUserRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	err := server.store.DeleteUserData(ctx, req.ID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, err)
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, nil)
 }
