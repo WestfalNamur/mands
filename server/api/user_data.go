@@ -91,7 +91,7 @@ type putUserRequest struct {
 	UserPassword string `json:"user_password" binding:"required"`
 }
 
-func (server *Server) putAllUser(ctx *gin.Context) {
+func (server *Server) putUser(ctx *gin.Context) {
 	var req putUserRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
