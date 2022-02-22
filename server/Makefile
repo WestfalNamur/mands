@@ -4,7 +4,8 @@ postgres:
     	-e POSTGRES_USER=mands_user \
     	-e POSTGRES_PASSWORD=mands_pw \
     	-p 5432:5432 \
-    	-d postgres:13.3-alpine
+    	-d postgres:13.3-alpine \
+		-c log_statement=all
 
 # Enter the db manually
 	# docker exec -it mands_postgres /bin/sh
