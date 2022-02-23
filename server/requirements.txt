@@ -1,0 +1,9 @@
+fastapi[all]
+pydantic
+uvicorn
+pytest
+mypy
+sqlalchemy-stubs # sqlmypy
+black
+flake8
+pytest-cov
