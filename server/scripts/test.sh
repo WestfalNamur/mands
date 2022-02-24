@@ -24,7 +24,6 @@ echo "Running Python from: $py_interpreter"
 
 # Correctness ---------------------------------------------
 
-# Type checking
 python3 -m mypy app/
 if [ $? -eq 1 ]
 then
@@ -40,6 +39,11 @@ python3 -m black app/
 python3 -m flake8 app/
 
 
+# Security ------------------------------------------------
+
+bandit -r app/  --configfile bandit.yaml
+
+
 # Test ----------------------------------------------------
 
-# python3 -m pytest --cov app/
+python3 -m pytest --cov app/

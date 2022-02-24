@@ -7,3 +7,4 @@ sqlalchemy-stubs # sqlmypy
 black
 flake8
 pytest-cov
+bandit
