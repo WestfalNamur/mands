@@ -2,7 +2,7 @@
 
 from fastapi.testclient import TestClient
 
-from ..api.main import app
+from app.api.main import app
 
 
 # Test client that will make requests to our app process.

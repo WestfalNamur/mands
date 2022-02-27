@@ -39,11 +39,11 @@ python3 -m black app/
 python3 -m flake8 app/
 
 
-# Security ------------------------------------------------
-
-bandit -r app/  --configfile bandit.yaml
-
-
 # Test ----------------------------------------------------
 
 python3 -m pytest --cov app/
+
+
+# Security ------------------------------------------------
+
+bandit -r app/  --configfile bandit.yaml
