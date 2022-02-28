@@ -4,7 +4,7 @@ import asyncio
 import logging
 from databases import Database
 
-from app.db.base import DB_SOURCE
+DB_SOURCE = "postgresql://mands_user:mands_pw@localhost:5432/mands_db?sslmode=disable"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
@@ -16,10 +16,6 @@ async def main() -> None:
 
     await database.connect()
 
-    values = {
-        "user_name": "rand_name",
-        "user_password": "rand_pw",
-    }
     query = """
         INSERT INTO user_data (
             user_name,
@@ -29,13 +25,20 @@ async def main() -> None:
             :user_password
         ) RETURNING (id, user_name, user_password);
     """
-    row = await database.execute(query=query, values=values)
-    results = {
-        "id": row[0],
-        "user_name": row[1],
-        "user_password": row[2],
-    }
-    logging.info(f"results: {results}")
+    values_john = {"user_name": "John", "user_password": "John"}
+    row = await database.execute(query=query, values=values_john)
+    values_jane = {"user_name": "Jane", "user_password": "Jane"}
+    row = await database.execute(query=query, values=values_jane)
+
+    values = {"offset": 0, "limit": 10}
+    query = """
+        SELECT (id, user_name, user_password) FROM user_data
+        ORDER BY id
+        LIMIT :limit OFFSET :offset
+    """
+    rows = await database.fetch_all(query=query, values=values)
+    for row in rows:
+        logging.info(f"results: {row[0][0]}")
 
 
 asyncio.run(main())
