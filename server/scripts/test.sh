@@ -36,12 +36,24 @@ fi
 
 python3 -m black app/
 
+python3 -m isort app/ --profile black
+
 python3 -m flake8 app/
+
+if [ $? -eq 1 ]
+then
+    exit 1
+fi
 
 
 # Test ----------------------------------------------------
 
 python3 -m pytest --cov app/
+
+if [ $? -eq 1 ]
+then
+    exit 1
+fi
 
 
 # Security ------------------------------------------------

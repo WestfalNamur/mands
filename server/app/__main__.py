@@ -4,7 +4,6 @@ import os
 
 from .api.main import run
 
-
 HOST = os.environ.get("HOST", "localhost")
 PORT = int(os.environ.get("PORT", 8000))
 

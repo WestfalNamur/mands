@@ -4,7 +4,6 @@ from fastapi.testclient import TestClient
 
 from app.api.main import app
 
-
 # Test client that will make requests to our app process.
 client = TestClient(app)
 

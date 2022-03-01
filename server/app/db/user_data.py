@@ -5,9 +5,8 @@ note: User class represents a row in user_data.
 
 from typing import List
 
-from pydantic import BaseModel
 from databases import Database
-
+from pydantic import BaseModel
 
 # --------------------------------------------------------------------------------------
 # Models
@@ -64,18 +63,22 @@ async def get_user_data(db: Database, id: str) -> UserData:
 
 
 async def get_all_user_data(db: Database, offset: int, limit: int) -> List[UserData]:
-    """Query all data from user_table."""
+    """Query all data from user_table.
+
+    note:
+        A record is  <databases.backends.postgres.Record object at 0x102c16130>
+        https://github.com/encode/databases/blob/master/databases/backends/postgres.py
+    """
     query = """
         SELECT (id, user_name, user_password) FROM user_data
         ORDER BY id
         LIMIT :limit OFFSET :offset
     """
     values = {"offset": offset, "limit": limit}
-    rows = await db.fetch_all(query=query, values=values)
+    records = await db.fetch_all(query=query, values=values)
     lst_user_data = []
-    for row in rows:
-        # TODO: What exactly is returned?
-        row = row[0]
+    for record in records:
+        row = record[0]
         user_data = {
             "id": row[0],
             "user_name": row[1],

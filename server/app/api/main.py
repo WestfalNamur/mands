@@ -2,9 +2,8 @@
 
 from typing import Dict
 
-from fastapi import FastAPI
 import uvicorn  # type: ignore
-
+from fastapi import FastAPI
 
 # Create FastAPI instane which will be our app run as a single process run by our
 # server program Uvicorn. We can run multiple server programs to make use of multiple

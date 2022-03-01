@@ -4,10 +4,10 @@ uvicorn
 mypy
 sqlalchemy-stubs # sqlmypy
 databases[postgresql]
-alembic
 black
 flake8
 pytest
 pytest-cov
 pytest-asyncio
 bandit
+isort

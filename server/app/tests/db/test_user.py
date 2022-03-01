@@ -2,14 +2,14 @@
 
 import pytest
 
-from app.tests.db.test_base import create_test_db
 from app.db.user_data import (
+    CreateUserData,
     UserData,
     create_user_data,
-    CreateUserData,
     get_all_user_data,
     get_user_data,
 )
+from app.tests.db.test_base import create_test_db
 from app.utils.random import create_random_string
 
 
@@ -48,9 +48,9 @@ async def test_get_user_data():
         user_data_in = generate_random_user_data()
         await create_user_data(db=db, create_user_data=user_data_in)
     user_data_lst = await get_all_user_data(db=db, offset=0, limit=10)
-    # for user_data in user_data_lst:
-    #     assert isinstance(user_data.id, int)
-    #     assert isinstance(user_data.user_name, str)
-    #     assert isinstance(user_data.user_password, str)
-    #     with pytest.raises(Exception):
-    #         assert isinstance(user_data.id, str)
+    for user_data in user_data_lst:
+        assert isinstance(user_data.id, int)
+        assert isinstance(user_data.user_name, str)
+        assert isinstance(user_data.user_password, str)
+        with pytest.raises(Exception):
+            assert isinstance(user_data.id, str)

@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+
 from databases import Database
 
 DB_SOURCE = "postgresql://mands_user:mands_pw@localhost:5432/mands_db?sslmode=disable"
@@ -38,7 +39,7 @@ async def main() -> None:
     """
     rows = await database.fetch_all(query=query, values=values)
     for row in rows:
-        logging.info(f"results: {row[0][0]}")
+        logging.info(f"results: {row._row[0][0]}")
 
 
 asyncio.run(main())
