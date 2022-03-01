@@ -1,13 +1,12 @@
-fastapi[all]
-pydantic
-uvicorn
-mypy
-sqlalchemy-stubs # sqlmypy
-databases[postgresql]
-black
-flake8
-pytest
-pytest-cov
-pytest-asyncio
-bandit
-isort
+fastapi[all]                # Web framework
+pydantic                    # Runtime type validation
+uvicorn                     # Process manager for our Gunicorn server processes
+mypy                        # Static typecheking
+databases[postgresql]       # Handels async connection between app and db
+black                       # Formatting
+flake8                      # Linting and code standards
+pytest                      # Testing
+pytest-cov                  # Test coverage 
+pytest-asyncio              # To allow async tests
+bandit                      # Check for known security mistakes
+isort                       # Sort imports

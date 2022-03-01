@@ -1,7 +1,12 @@
 # Server
 
+Backend server for mands app.
+
+## Usage
+
 Install
 ```sh
+python3 -m venv env/
 pip3 install --user -r requirements.txt
 ```
 
@@ -19,3 +24,10 @@ When running api docs are under
 ```sh
 http://<HOST>:<PORT>/docs
 ```
+
+## Tooling outside requirements.
+
+- **dbdiagram.io** to develop the database schema.
+- **Docker PostgreSQL image**
+- **golang-migrate** for database migrations.
+- **TablePlus** to interact with Postgres and develop queries.
