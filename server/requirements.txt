@@ -11,3 +11,13 @@ pytest
 pytest-cov
 pytest-asyncio
 bandit
+# SQLC
+asyncpg
+sqlalchemy
+# Pyscope build not yet smooth via Pip in M1
+# https://github.com/psycopg/psycopg2/issues/1286
+# $: brew install postgresql
+# $: export CPPFLAGS="-I/opt/homebrew/opt/openssl@1.1/include"
+# $: export LDFLAGS="-L/opt/homebrew/opt/openssl@1.1/lib -L${HOME}/.pyenv/versions/3.8.10/lib"
+# $: python -V
+psycopg2-binary==2.8.6 

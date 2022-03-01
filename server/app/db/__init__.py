@@ -1,1 +1,1 @@
-"""Database connetion and operations."""
+"""Database connections of our app."""

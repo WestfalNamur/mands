@@ -1,0 +1,18 @@
+{
+  "version": "2",
+  "sql": [
+    {
+      "schema": "./app/db/migration",
+      "queries": "./app/db/query",
+      "engine": "postgresql",
+      "gen": {
+        "python": {
+          "out": "./app/db/sqlc",
+          "package": "db",
+          "emit_sync_querier": true,
+          "emit_async_querier": true
+        }
+      }
+    }
+  ]
+}
