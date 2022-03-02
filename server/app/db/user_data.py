@@ -50,10 +50,12 @@ async def create_user_data(db: Database, create_user_data: CreateUserData) -> Us
     return UserData(**user_data)
 
 
-async def get_user_data(db: Database, id: str) -> UserData:
+async def get_user_data(db: Database, id: int) -> UserData:
     """Query to get single user_data by id."""
     query = "SELECT (id, user_name, user_password) FROM user_data WHERE id = :id"
     row = await db.execute(query=query, values={"id": id})
+    if not row:
+        raise ValueError("No user data with this id.")
     user_data = {
         "id": row[0],
         "user_name": row[1],
@@ -63,12 +65,7 @@ async def get_user_data(db: Database, id: str) -> UserData:
 
 
 async def get_all_user_data(db: Database, offset: int, limit: int) -> List[UserData]:
-    """Query all data from user_table.
-
-    note:
-        A record is  <databases.backends.postgres.Record object at 0x102c16130>
-        https://github.com/encode/databases/blob/master/databases/backends/postgres.py
-    """
+    """Query all data from user_table."""
     query = """
         SELECT (id, user_name, user_password) FROM user_data
         ORDER BY id
@@ -86,3 +83,30 @@ async def get_all_user_data(db: Database, offset: int, limit: int) -> List[UserD
         }
         lst_user_data.append(UserData(**user_data))
     return lst_user_data
+
+
+async def update_user_data(db: Database, new_user_data: UserData) -> UserData:
+    """Update user_data entry in db."""
+    query = """
+        UPDATE user_data
+        SET user_name = :user_name,
+            user_password = :user_password
+        WHERE id = :id
+        RETURNING (id, user_name, user_password);
+    """
+    err = await get_user_data(db=db, id=new_user_data.id)
+    if isinstance(err, str):
+        raise ValueError("No user data with this id.")
+    row = await db.execute(query=query, values=new_user_data.dict())
+    updated_user_data = {
+        "id": row[0],
+        "user_name": row[1],
+        "user_password": row[2],
+    }
+    return UserData(**updated_user_data)
+
+
+async def delete_user_data(db: Database, id: int) -> None:
+    """Delete an existing user."""
+    query = """DELETE FROM user_data WHERE id = :id;"""
+    await db.execute(query=query, values={"id": id})

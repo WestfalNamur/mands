@@ -26,20 +26,26 @@ async def main() -> None:
             :user_password
         ) RETURNING (id, user_name, user_password);
     """
-    values_john = {"user_name": "John", "user_password": "John"}
-    row = await database.execute(query=query, values=values_john)
-    values_jane = {"user_name": "Jane", "user_password": "Jane"}
-    row = await database.execute(query=query, values=values_jane)
+    values = {"user_name": "John", "user_password": "John"}
+    row_create = await database.execute(query=query, values=values)
 
-    values = {"offset": 0, "limit": 10}
     query = """
-        SELECT (id, user_name, user_password) FROM user_data
-        ORDER BY id
-        LIMIT :limit OFFSET :offset
+        UPDATE user_data
+        SET user_name = :user_name,
+            user_password = :user_password
+        WHERE id = :id
+        RETURNING (id, user_name, user_password);
     """
-    rows = await database.fetch_all(query=query, values=values)
-    for row in rows:
-        logging.info(f"results: {row._row[0][0]}")
+    values = {
+        "id": row_create[0],
+        "user_name": row_create[1],
+        "user_password": "42",
+    }
+    try:
+        row_update = await database.execute(query=query, values=values)
+    except Exception as err:
+        print(f"error: {err}")
+    print(row_update)
 
 
 asyncio.run(main())
