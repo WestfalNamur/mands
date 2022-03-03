@@ -8,7 +8,9 @@ import os
 
 from databases import Database
 
-DB_SOURCE = "postgresql://mands_user:mands_pw@localhost:5432/mands_db?sslmode=disable"
+DB_SOURCE = (
+    "postgresql+asyncpg://mands_user:mands_pw@localhost:5432/mands_db?sslmode=disable"
+)
 
 
 async def create_db() -> Database:
