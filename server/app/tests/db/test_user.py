@@ -17,8 +17,8 @@ from app.utils.random import create_random_string
 
 def generate_random_user_data() -> UserData:
     rand_user_data = {
-        "user_name": create_random_string(21),
-        "user_password": create_random_string(21),
+        "user_name": create_random_string(20),
+        "user_password": create_random_string(20),
     }
     return NewUserData(**rand_user_data)
 
@@ -73,14 +73,15 @@ async def test_update_user_data():
         new_user_data=generate_random_user_data(),
     )
     # Update result user data
-    assert new_user.user_password != "42"
-    new_user.user_password = "42"
-    assert new_user.user_password == "42"
+    rand_pw = create_random_string(12)
+    assert new_user.user_password != rand_pw
+    new_user.user_password = rand_pw
+    assert new_user.user_password == rand_pw
     # Execute user update query.
     err = await update_user_data(db=db, new_user_data=new_user)
     assert not isinstance(err, str)
     updated_user = await get_user_data(db=db, id=new_user.id)
-    assert updated_user.user_password == "42"
+    assert updated_user.user_password == rand_pw
 
 
 @pytest.mark.asyncio

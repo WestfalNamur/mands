@@ -29,10 +29,10 @@ dropdb:
 
 
 migrateup:
-	migrate -path db/migration -database "postgresql://mands_user:mands_pw@localhost:5432/mands_db?sslmode=disable" -verbose up
+	migrate -path app/db/migration -database "postgresql://mands_user:mands_pw@localhost:5432/mands_db?sslmode=disable" -verbose up
 
 
 migratedown:
-	migrate -path db/migration -database "postgresql://mands_user:mands_pw@localhost:5432/mands_db?sslmode=disable" -verbose down
+	migrate -path app/db/migration -database "postgresql://mands_user:mands_pw@localhost:5432/mands_db?sslmode=disable" -verbose down
 
 	
