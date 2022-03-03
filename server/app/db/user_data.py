@@ -13,7 +13,7 @@ from pydantic import BaseModel
 # --------------------------------------------------------------------------------------
 
 
-class CreateUserData(BaseModel):
+class NewUserData(BaseModel):
     user_name: str
     user_password: str
 
@@ -29,7 +29,7 @@ class UserData(BaseModel):
 # --------------------------------------------------------------------------------------
 
 
-async def create_user_data(db: Database, create_user_data: CreateUserData) -> UserData:
+async def create_user_data(db: Database, new_user_data: NewUserData) -> UserData:
     """Query to add user to user_data table."""
     query = """
         INSERT INTO user_data (
@@ -40,7 +40,7 @@ async def create_user_data(db: Database, create_user_data: CreateUserData) -> Us
             :user_password
         ) RETURNING (id, user_name, user_password);
     """
-    values = create_user_data.dict()
+    values = new_user_data.dict()
     row = await db.execute(query=query, values=values)
     user_data = {
         "id": row[0],

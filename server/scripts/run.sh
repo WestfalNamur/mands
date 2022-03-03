@@ -1,6 +1,8 @@
 clear
 
-# Enviroment ----------------------------------------------
+# Environment ----------------------------------------------
+
+MANDSENV="dev"
 
 # Correct directory?
 if  [ ! -f "./app/__init__.py" ]

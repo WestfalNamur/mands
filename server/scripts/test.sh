@@ -1,6 +1,9 @@
 clear
 
-# Enviroment ----------------------------------------------
+# Environment ----------------------------------------------
+
+# set env vars for current shell and all processes started from current shell.
+export MANDSENV="testing"
 
 # Correct directory?
 if  [ ! -f "./app/__init__.py" ]
@@ -9,7 +12,7 @@ then
     exit 1
 fi
 
-# Correct Python enviroment?
+# Correct Python environment?
 if  [ ! -d "./env" ]
 then
     echo "Did not find an virtual enviroment for Python under ./env/"
