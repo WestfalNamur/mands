@@ -3,7 +3,7 @@
 note: User class represents a row in user_data.
 """
 
-from typing import List
+from typing import List, Union
 
 from databases import Database
 from pydantic import BaseModel
@@ -50,12 +50,12 @@ async def create_user_data(db: Database, create_user_data: CreateUserData) -> Us
     return UserData(**user_data)
 
 
-async def get_user_data(db: Database, id: int) -> UserData:
+async def get_user_data(db: Database, id: int) -> Union[UserData, None]:
     """Query to get single user_data by id."""
     query = "SELECT (id, user_name, user_password) FROM user_data WHERE id = :id"
     row = await db.execute(query=query, values={"id": id})
     if not row:
-        raise ValueError("No user data with this id.")
+        return None
     user_data = {
         "id": row[0],
         "user_name": row[1],
@@ -85,8 +85,13 @@ async def get_all_user_data(db: Database, offset: int, limit: int) -> List[UserD
     return lst_user_data
 
 
-async def update_user_data(db: Database, new_user_data: UserData) -> UserData:
-    """Update user_data entry in db."""
+async def update_user_data(
+    db: Database, new_user_data: UserData
+) -> Union[UserData, None]:
+    """Check if user exists and then update."""
+    usr = await get_user_data(db=db, id=new_user_data.id)
+    if not usr:
+        return None
     query = """
         UPDATE user_data
         SET user_name = :user_name,
@@ -94,9 +99,6 @@ async def update_user_data(db: Database, new_user_data: UserData) -> UserData:
         WHERE id = :id
         RETURNING (id, user_name, user_password);
     """
-    err = await get_user_data(db=db, id=new_user_data.id)
-    if isinstance(err, str):
-        raise ValueError("No user data with this id.")
     row = await db.execute(query=query, values=new_user_data.dict())
     updated_user_data = {
         "id": row[0],

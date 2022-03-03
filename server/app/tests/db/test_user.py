@@ -43,10 +43,9 @@ async def test_get_user_data():
 
 
 @pytest.mark.asyncio
-async def test_get_user_data_error_no_user():
+async def test_get_user_data_none_no_user():
     db = await create_test_db()
-    with pytest.raises(Exception):
-        await get_user_data(db=db, id=42000000)
+    assert not await get_user_data(db=db, id=42000000)
 
 
 @pytest.mark.asyncio
@@ -85,13 +84,12 @@ async def test_update_user_data():
 
 
 @pytest.mark.asyncio
-async def test_update_user_data_ensure_err_when_not_existing():
+async def test_update_user_data_ensure_none_when_not_existing():
     db = await create_test_db()
     non_existing_user = UserData(
         **{"id": 4200000, "user_name": "John", "user_password": "Jane"}
     )
-    with pytest.raises(Exception):
-        await update_user_data(db=db, new_user_data=non_existing_user)
+    assert not await update_user_data(db=db, new_user_data=non_existing_user)
 
 
 @pytest.mark.asyncio
@@ -107,5 +105,4 @@ async def test_delete_user_data():
     # Delete user data
     await delete_user_data(db=db, id=new_user.id)
     # Get again, should thorugh an error
-    with pytest.raises(Exception):
-        await get_user_data(db=db, id=new_user.id)
+    assert not await get_user_data(db=db, id=new_user.id)
