@@ -1,5 +1,3 @@
-"""Api tests."""
-
 from fastapi.testclient import TestClient
 
 from app.api.main import app

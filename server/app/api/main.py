@@ -6,8 +6,6 @@ from typing import Dict
 import uvicorn  # type: ignore
 from fastapi import FastAPI
 
-from app.api.routers.users import router_users
-
 # ------------------------------------------------------------------------------
 # Setup
 #
@@ -24,7 +22,6 @@ mands_env = os.environ["MANDSENV"]
 
 # Instantiate app and register routers.
 app = FastAPI()
-app.include_router(router_users)
 
 
 # ------------------------------------------------------------------------------
