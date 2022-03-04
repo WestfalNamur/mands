@@ -11,3 +11,5 @@ pytest-asyncio              # To allow async tests
 bandit                      # Check for known security mistakes
 isort                       # Sort imports
 aiosqlite                   # Driver to allow async sqlite connections.
+databases[asyncpg]
+asyncpg

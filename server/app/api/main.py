@@ -2,11 +2,10 @@
 
 from typing import Dict
 
+import databases
 import uvicorn  # type: ignore
 from fastapi import FastAPI
-
-from app.api.routers.users import router_users
-from app.db.config import Base, engine
+from pydantic import BaseModel
 
 # ------------------------------------------------------------------------------
 # Setup
@@ -20,18 +19,65 @@ from app.db.config import Base, engine
 # Create a database connection pool.
 # ------------------------------------------------------------------------------
 
+# Database
+DATABASE_URL = (
+    "postgresql+asyncpg://mands_user:mands_pw@localhost:5432/mands_db?sslmode=disable"
+)
+database = databases.Database(DATABASE_URL)
+
 
 # Instantiate app and register routers.
 app = FastAPI()
-app.include_router(router_users)
 
 
+# For sanity check
+@app.get("/ping")
+def ping() -> Dict[str, str]:
+    """Sanity test."""
+    return {"msg": "pong"}
+
+
+# lifecycle methodes
 @app.on_event("startup")
 async def startup() -> None:
-    # create db tables
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
+    await database.connect()
+
+
+@app.on_event("shutdown")
+async def shutdown() -> None:
+    await database.disconnect()
+
+
+class NewUser(BaseModel):
+    user_name: str
+    user_password: str
+
+
+class User(BaseModel):
+    id: int
+    user_name: str
+    user_password: str
+
+
+@app.post("/users")
+async def create_user(new_user: NewUser) -> User:
+    query = """
+        INSERT INTO user_data (
+            user_name,
+            user_password
+        ) VALUES (
+            :user_name,
+            :user_password
+        ) RETURNING (id, user_name, user_password);
+    """
+    values = new_user.dict()
+    row = await database.execute(query=query, values=values)
+    user_data = {
+        "id": row[0],
+        "user_name": row[1],
+        "user_password": row[2],
+    }
+    return User(**user_data)
 
 
 # ------------------------------------------------------------------------------
@@ -42,12 +88,6 @@ async def startup() -> None:
 #   Together Uvicorn acts a process manager that manages one or more Gunicorn
 #   process that run out app.
 # ------------------------------------------------------------------------------
-
-# For sanity check
-@app.get("/ping")
-def ping() -> Dict[str, str]:
-    """Sanity test."""
-    return {"msg": "pong"}
 
 
 def run(host: str, port: int) -> None:
