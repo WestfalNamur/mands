@@ -26,4 +26,4 @@ def test_users_post() -> None:
             "/users",
             json=new_user,
         )
-        assert res.status_code == 409
+        assert res.status_code == 500
