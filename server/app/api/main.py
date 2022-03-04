@@ -6,6 +6,9 @@ from typing import Dict
 import uvicorn  # type: ignore
 from fastapi import FastAPI
 
+from app.db.config import Base, async_session, engine
+from app.db.dals.user import UserDAL
+
 # ------------------------------------------------------------------------------
 # Setup
 #
@@ -22,6 +25,24 @@ mands_env = os.environ["MANDSENV"]
 
 # Instantiate app and register routers.
 app = FastAPI()
+
+
+@app.on_event("startup")
+async def startup() -> None:
+    # create db tables
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
+
+
+@app.post("/users")
+async def create_user(user_name: str, user_password: str) -> None:
+    async with async_session() as session:
+        async with session.begin():
+            user_dal = UserDAL(session)
+            return await user_dal.create_user(
+                user_name=user_name, user_password=user_password
+            )
 
 
 # ------------------------------------------------------------------------------

@@ -2,7 +2,7 @@ fastapi[all]                # Web framework
 pydantic                    # Runtime type validation
 uvicorn                     # Process manager for our Gunicorn server processes
 mypy                        # Static type cheking
-databases[postgresql]       # Async connection between app and db
+sqlalchemy[asyncio]         # db orm
 asyncpg                     # fast PostgreSQL Database Client Library for Python/asyncio.
 black                       # Formatting
 flake8                      # Linting and code standards
@@ -11,3 +11,4 @@ pytest-cov                  # Test coverage
 pytest-asyncio              # To allow async tests
 bandit                      # Check for known security mistakes
 isort                       # Sort imports
+aiosqlite
