@@ -1,12 +1,10 @@
-from typing import Union
-
 from fastapi import HTTPException
 
 from app.db.base import database
 from app.db.models.models_user import NewUser, User
 
 
-async def create_user(new_user: NewUser) -> Union[str, User]:
+async def create_user(new_user: NewUser) -> User:
     query = """
         INSERT INTO user_data (
             user_name,
