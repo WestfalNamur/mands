@@ -2,7 +2,7 @@ clear
 
 # Environment ----------------------------------------------
 
-export MANDSENV="testing"
+export MANDSENV="dev"
 
 # Correct directory?
 if  [ ! -f "./app/__init__.py" ]

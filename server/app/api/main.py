@@ -5,8 +5,8 @@ from typing import Dict
 import uvicorn  # type: ignore
 from fastapi import FastAPI
 
-from app.api.routers.users import router_users
-from app.db.config import Base, engine
+from app.api.routers.router_users import router_users
+from app.db.base import database
 
 # ------------------------------------------------------------------------------
 # Setup
@@ -16,8 +16,6 @@ from app.db.config import Base, engine
 # cores on our machine. For more infos see the FastAPI documentation.
 # https://fastapi.tiangolo.com/deployment/server-workers/?h=gunicorn
 # Register routers in app.
-#
-# Create a database connection pool.
 # ------------------------------------------------------------------------------
 
 
@@ -26,12 +24,22 @@ app = FastAPI()
 app.include_router(router_users)
 
 
+# For sanity check
+@app.get("/ping")
+def ping() -> Dict[str, str]:
+    """Sanity test."""
+    return {"msg": "pong"}
+
+
+# lifecycle methodes
 @app.on_event("startup")
 async def startup() -> None:
-    # create db tables
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
+    await database.connect()
+
+
+@app.on_event("shutdown")
+async def shutdown() -> None:
+    await database.disconnect()
 
 
 # ------------------------------------------------------------------------------
@@ -42,12 +50,6 @@ async def startup() -> None:
 #   Together Uvicorn acts a process manager that manages one or more Gunicorn
 #   process that run out app.
 # ------------------------------------------------------------------------------
-
-# For sanity check
-@app.get("/ping")
-def ping() -> Dict[str, str]:
-    """Sanity test."""
-    return {"msg": "pong"}
 
 
 def run(host: str, port: int) -> None:
