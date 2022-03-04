@@ -1,0 +1,7 @@
+env/
+__pycache__/
+.mypy_cache/
+.vscode/
+.coverage/
+.pytest_cache/
+sqlite.db
