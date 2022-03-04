@@ -1,10 +1,10 @@
 """Module to set up fastapi API to expose API to the outside world."""
 
-from typing import Dict
+from typing import Dict, Union
 
 import databases
 import uvicorn  # type: ignore
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 # ------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ class User(BaseModel):
 
 
 @app.post("/users")
-async def create_user(new_user: NewUser) -> User:
+async def create_user(new_user: NewUser) -> Union[str, User]:
     query = """
         INSERT INTO user_data (
             user_name,
@@ -71,7 +71,11 @@ async def create_user(new_user: NewUser) -> User:
         ) RETURNING (id, user_name, user_password);
     """
     values = new_user.dict()
-    row = await database.execute(query=query, values=values)
+    try:
+        row = await database.execute(query=query, values=values)
+    except (Exception) as err:
+        detail = f"err: {err}"
+        raise HTTPException(status_code=409, detail=detail)
     user_data = {
         "id": row[0],
         "user_name": row[1],

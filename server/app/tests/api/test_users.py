@@ -12,11 +12,18 @@ def test_users_post() -> None:
             2. json with user_name, user_password, and id
             3. return 400 when username duplicated.
         """
+        new_user = {
+            "user_name": create_random_string(20),
+            "user_password": create_random_string(20),
+        }
         res = client.post(
             "/users",
-            json={
-                "user_name": create_random_string(20),
-                "user_password": create_random_string(20),
-            },
+            json=new_user,
         )
         assert res.status_code == 200
+        assert isinstance(res.json()["id"], int)
+        res = client.post(
+            "/users",
+            json=new_user,
+        )
+        assert res.status_code == 409
