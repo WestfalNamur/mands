@@ -4,6 +4,7 @@ clear
 
 # set env vars for current shell and all processes started from current shell.
 export MANDSENV="testing"
+export DATABASE_URL="postgresql://mands_user:mands_pw@localhost:5432/mands_db?sslmode=disable"
 
 # Correct directory?
 if  [ ! -f "./app/__init__.py" ]

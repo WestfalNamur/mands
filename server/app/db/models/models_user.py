@@ -1,12 +1,16 @@
+"""Pydantic models for user_data."""
+
 from pydantic import BaseModel
 
 
-class NewUser(BaseModel):
+class BaseUser(BaseModel):
     user_name: str
     user_password: str
 
 
-class User(BaseModel):
+class NewUser(BaseUser):
+    pass
+
+
+class User(BaseUser):
     id: int
-    user_name: str
-    user_password: str

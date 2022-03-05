@@ -8,15 +8,14 @@ from fastapi import FastAPI
 from app.api.routers.router_users import router_users
 from app.db.base import database
 
-# ------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------
 # Setup
 #
 # Create FastAPI instance which will be our app run as a single process run by our
 # server program Uvicorn. We can run multiple server programs to make use of multiple
 # cores on our machine. For more infos see the FastAPI documentation.
 # https://fastapi.tiangolo.com/deployment/server-workers/?h=gunicorn
-# Register routers in app.
-# ------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------
 
 
 # Instantiate app and register routers.
@@ -24,14 +23,14 @@ app = FastAPI()
 app.include_router(router_users)
 
 
-# For sanity check
+# A dummy for route for sanity checks.
 @app.get("/ping")
 def ping() -> Dict[str, str]:
     """Sanity test."""
     return {"msg": "pong"}
 
 
-# lifecycle methodes
+# app lifecycle methods.
 @app.on_event("startup")
 async def startup() -> None:
     await database.connect()

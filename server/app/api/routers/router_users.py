@@ -1,3 +1,5 @@
+"""Router for /users resource."""
+
 from typing import List, Union
 
 from fastapi import APIRouter

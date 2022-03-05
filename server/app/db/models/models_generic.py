@@ -1,3 +1,5 @@
+"""Generic Pydantic models that are used in different contexts."""
+
 from pydantic import BaseModel
 
 
