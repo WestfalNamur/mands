@@ -1,7 +1,33 @@
+from typing import List
+
 from fastapi.testclient import TestClient
+from pydantic import parse_obj_as
 
 from app.api.main import app
+from app.db.models.models_todo import Todo
 from app.utils.random_data_generator import create_random_string
+
+
+def create_user(client: TestClient) -> int:
+    user = {
+        "user_name": create_random_string(20),
+        "user_password": create_random_string(20),
+    }
+    res = client.post("/users", json=user)
+    assert res.status_code == 200
+    user_id = res.json()["id"]
+    return user_id
+
+
+def create_todo(client: TestClient, user_id: int) -> Todo:
+    new_todo = {
+        "user_id": user_id,
+        "content_text": create_random_string(20),
+        "done": False,
+    }
+    res = client.post("/todos", json=new_todo)
+    assert res.status_code == 200
+    return Todo(**res.json())
 
 
 def test_todos_create() -> None:
@@ -12,24 +38,44 @@ def test_todos_create() -> None:
             2. return JSON of Todo schema.
             3. Fail if user does not exist
         """
-        # Creat user to add todos to.
-        user = {
-            "user_name": create_random_string(20),
-            "user_password": create_random_string(20),
-        }
-        res = client.post("/users", json=user)
-        assert res.status_code == 200
-        user_id = res.json()["id"]
-        # Add new_todo
+        user_id = create_user(client=client)
+        _ = create_todo(client=client, user_id=user_id)
+        # Add new_todo to non-existing user.
         new_todo = {
-            "user_id": user_id,
+            "user_id": 42000,
             "content_text": create_random_string(20),
             "done": False,
         }
         res = client.post("/todos", json=new_todo)
-        assert res.status_code == 200
-        assert isinstance(res.json()["id"], int)
-        # Add new_todo to non-existing user.
-        new_todo["user_id"] = 42000
-        res = client.post("/todos", json=new_todo)
         assert res.status_code == 500
+
+
+def test_todos_get() -> None:
+    with TestClient(app) as client:
+        """
+        get /todos/{todo_id} should:
+            1. return 200 and todo or none.
+        """
+        user_id = create_user(client=client)
+        todo = create_todo(client=client, user_id=user_id)
+        res = client.get(f"/todos/{todo.id}")
+        assert res.status_code == 200
+        assert Todo(**res.json())
+        res = client.get("/todos/42000")
+        assert res.status_code == 200
+        assert res.json() is None
+
+
+def test_todos_get_all() -> None:
+    with TestClient(app) as client:
+        """
+        get /todos should:
+            1. return 200 and todos or [].
+        """
+        user_id = create_user(client=client)
+        for _ in range(5):
+            create_todo(client=client, user_id=user_id)
+        limit_offset = {"limit": 10, "offset": 0}
+        res = client.get("/todos", json=limit_offset)
+        assert res.status_code == 200
+        assert parse_obj_as(List[Todo], res.json())
