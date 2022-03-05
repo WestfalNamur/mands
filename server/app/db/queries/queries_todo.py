@@ -58,3 +58,33 @@ async def read_all_todo(limit_offset: LimitOffset) -> List[Todo]:
         }
         todos.append(Todo(**data))
     return todos
+
+
+async def update_todo(new_todo: Todo) -> Union[Todo, None]:
+    todo = await read_todo(todo_id=new_todo.id)
+    if not todo:
+        return None
+    query = """
+        UPDATE todo
+        SET user_id = :user_id,
+            content_text = :content_text,
+            done = :done
+        WHERE id = :id
+        RETURNING (id, user_id, content_text, done);
+    """
+    row = await database.execute(query=query, values=new_todo.dict())
+    data = {
+        "id": row[0],
+        "user_id": row[1],
+        "content_text": row[2],
+        "done": row[3],
+    }
+    return Todo(**data)
+
+
+async def delete_todo_query(todo_id: int) -> None:
+    query = """
+        DELETE FROM todo
+        WHERE id = :id;
+    """
+    await database.execute(query=query, values={"id": todo_id})

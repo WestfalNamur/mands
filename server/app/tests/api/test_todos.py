@@ -79,3 +79,39 @@ def test_todos_get_all() -> None:
         res = client.get("/todos", json=limit_offset)
         assert res.status_code == 200
         assert parse_obj_as(List[Todo], res.json())
+
+
+def test_todos_put():
+    with TestClient(app) as client:
+        """
+        put /todos should:
+            return 200 & None if not existing
+            return 200 & updated version of the todo
+        """
+        user_id = create_user(client=client)
+        todo_original = create_todo(client=client, user_id=user_id)
+        todo_original.done = True
+        res = client.put("/todos", json=todo_original.dict())
+        assert res.status_code == 200
+        assert Todo(**res.json())
+        todo_updated = client.get(f"/todos/{todo_original.id}")
+        assert todo_updated.status_code == 200
+        assert todo_updated.json()["done"]
+
+
+def test_todo_delte():
+    with TestClient(app) as client:
+        """
+        delete /todos should:
+            return 200 & None
+        """
+        user_id = create_user(client=client)
+        todo = create_todo(client=client, user_id=user_id)
+        res = client.get(f"/todos/{todo.id}")
+        assert res.status_code == 200
+        assert Todo(**res.json())
+        res = client.delete(f"/todos/{todo.id}")
+        assert res.status_code == 200
+        res = client.get(f"/todos/{todo.id}")
+        assert res.status_code == 200
+        assert res.json() is None
