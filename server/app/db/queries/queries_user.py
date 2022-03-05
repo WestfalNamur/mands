@@ -1,3 +1,5 @@
+"""Crud functions for user_data table."""
+
 from typing import List, Union
 
 from fastapi import HTTPException

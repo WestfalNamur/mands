@@ -5,6 +5,7 @@ from typing import Dict
 import uvicorn  # type: ignore
 from fastapi import FastAPI
 
+from app.api.routers.router_todos import router_todos
 from app.api.routers.router_users import router_users
 from app.db.base import database
 
@@ -21,6 +22,7 @@ from app.db.base import database
 # Instantiate app and register routers.
 app = FastAPI()
 app.include_router(router_users)
+app.include_router(router_todos)
 
 
 # A dummy for route for sanity checks.
