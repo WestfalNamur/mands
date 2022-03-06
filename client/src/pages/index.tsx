@@ -1,7 +1,7 @@
 import type {NextPage} from "next";
 import styles from "../features/landingView/LandingView.module.css"
 
-import LandingView from "../features/landingView";
+import LandingView from "../features/landingView/LandingView";
 import NavBar from "../features/layout/navBar";
 
 const Home: NextPage = () => {

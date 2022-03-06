@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
-import styles from "../../../styles/Layout.module.css";
+import {useRouter} from "next/router";
+import styles from "../Layout.module.css"
 
 interface Props {
   href: string;
@@ -8,8 +8,8 @@ interface Props {
 }
 
 export default function NavBarLink(props: Props) {
-  const { href, text } = props;
-  const { asPath } = useRouter();
+  const {href, text} = props;
+  const {asPath} = useRouter();
 
   const classNameLi = asPath == href ? "-mb-px mr-1" : "mr-1";
   const classNameA = asPath == href ? styles.aIsPath : styles.aIsNotPath;

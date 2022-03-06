@@ -1,5 +1,5 @@
 import NavBar from "../features/layout/navBar";
-import Index from "../features/listTodos";
+import Index from "../features/listTodos/ListTodos";
 import styles from "../features/listTodos/ListTodos.module.css"
 
 export default function Todos() {

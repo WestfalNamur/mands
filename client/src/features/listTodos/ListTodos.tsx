@@ -1,8 +1,9 @@
 import 'antd/dist/antd.css';
 import useSWR from 'swr'
 import {isTodo, Todo} from "./types"
-import ListTodosItem from "./listTodosItem";
+import ListTodosItem from "./ListTodosItem";
 import styles from "./ListTodos.module.css"
+import AddTodo from "./ListTodoAdd"
 
 
 const fetcher = async (url: string) => {
@@ -31,6 +32,7 @@ export default function Index() {
     <>
       <div className={styles.list}>
         {items}
+        <AddTodo/>
       </div>
     </>
   )
