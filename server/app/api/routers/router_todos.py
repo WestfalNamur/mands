@@ -28,7 +28,9 @@ async def get_todo(todo_id: int) -> Union[Todo, None]:
 
 
 @router_todos.get("/todos")
-async def get_all_todo(limit_offset: LimitOffset) -> List[Todo]:
+async def get_all_todo(limit: int = 10, offset: int = 0) -> List[Todo]:
+    # todos/?limit=10&offset=0
+    limit_offset = LimitOffset(**{"limit": limit, "offset": offset})
     return await read_all_todo(limit_offset=limit_offset)
 
 

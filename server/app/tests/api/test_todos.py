@@ -75,8 +75,7 @@ def test_todos_get_all() -> None:
         user_id = create_user(client=client)
         for _ in range(5):
             create_todo(client=client, user_id=user_id)
-        limit_offset = {"limit": 10, "offset": 0}
-        res = client.get("/todos", json=limit_offset)
+        res = client.get("/todos/?limit=5&offset=0")
         assert res.status_code == 200
         assert parse_obj_as(List[Todo], res.json())
 
@@ -99,7 +98,7 @@ def test_todos_put():
         assert todo_updated.json()["done"]
 
 
-def test_todo_delte():
+def test_todo_delete():
     with TestClient(app) as client:
         """
         delete /todos should:
