@@ -1,0 +1,7 @@
+.main {
+    @apply grid place-items-center;
+}
+
+.list {
+    @apply w-1/3;
+}

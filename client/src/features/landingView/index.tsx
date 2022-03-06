@@ -1,6 +1,6 @@
 import LandingViewTile from "./LandingViewTile";
 
-import styles from "../../styles/LandingView.module.css";
+import styles from "./LandingView.module.css"
 
 // TODO
 // xs:square causes problems when using via LandingView.module.css

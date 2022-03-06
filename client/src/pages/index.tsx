@@ -1,5 +1,5 @@
-import type { NextPage } from "next";
-import styles from "../styles/Home.module.css";
+import type {NextPage} from "next";
+import styles from "../features/landingView/LandingView.module.css"
 
 import LandingView from "../features/landingView";
 import NavBar from "../features/layout/navBar";
@@ -7,9 +7,9 @@ import NavBar from "../features/layout/navBar";
 const Home: NextPage = () => {
   return (
     <>
-      <NavBar />
+      <NavBar/>
       <div className={styles.main}>
-        <LandingView />
+        <LandingView/>
       </div>
     </>
   );
