@@ -2,8 +2,8 @@ import 'antd/dist/antd.css';
 import useSWR from 'swr'
 import {isTodo, Todo} from "./types"
 import ListTodosItem from "./ListTodosItem";
+import AddTodo from "./ListTodoAdd";
 import styles from "./ListTodos.module.css"
-import AddTodo from "./ListTodoAdd"
 
 
 const fetcher = async (url: string) => {
@@ -19,14 +19,7 @@ export default function Index() {
   if (!data) return <p>no data ...</p>;
 
   const todos: Todo[] = data.filter((todo: Todo) => isTodo(todo))
-  const items: JSX.Element[] = todos.map(todo => {
-    return (
-      <ListTodosItem
-        key={todo.id}
-        content_text={todo.content_text}
-        done={todo.done}/>
-    )
-  })
+  const items = todos.map(todo => <ListTodosItem key={todo.id} {...todo}/>)
 
   return (
     <>
