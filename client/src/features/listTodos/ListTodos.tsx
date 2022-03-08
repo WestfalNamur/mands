@@ -1,22 +1,20 @@
 import 'antd/dist/antd.css';
-import useSWR from 'swr'
 import {isTodo, Todo} from "./types"
 import ListTodosItem from "./ListTodosItem";
 import AddTodo from "./ListTodoAdd";
-import styles from "./ListTodos.module.css"
-
-
-const fetcher = async (url: string) => {
-  const res = await fetch(url)
-  return res.json()
-}
-
+import styles from "./ListTodos.module.css";
+import {useQuery} from "react-query";
 
 export default function Index() {
-  const {data, error} = useSWR('http://localhost:8000/todos/?limit=10&offset=0', fetcher)
+  const {isLoading, error, data} = useQuery<Todo[], Error>('repoData', () =>
+    fetch('http://localhost:8000/todos?limit=10&offset=0')
+      .then(res => res.json())
+  )
 
-  if (error) return <p>{error.status}</p>;
+  if (isLoading) return <p>...loading.</p>
+  if (error) return <p>{error}</p>;
   if (!data) return <p>no data ...</p>;
+  console.log(data)
 
   const todos: Todo[] = data.filter((todo: Todo) => isTodo(todo))
   const items = todos.map(todo => <ListTodosItem key={todo.id} {...todo}/>)
