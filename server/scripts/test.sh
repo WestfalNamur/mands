@@ -6,22 +6,8 @@ clear
 export MANDSENV="testing"
 export DATABASE_URL="postgresql://mands_user:mands_pw@localhost:5432/mands_db?sslmode=disable"
 
-# Correct directory?
-if  [ ! -f "./app/__init__.py" ]
-then
-    echo "You are not in the correct directory. Navigate to mands/server/"
-    exit 1
-fi
-
-# Correct Python environment?
-if  [ ! -d "./env" ]
-then
-    echo "Did not find an virtual environment for Python under ./env/"
-    exit 1
-fi
 
 # Source python environment
-source env/bin/activate
 py_interpreter=$(which python)
 echo "Running Python from: $py_interpreter"
 
