@@ -38,6 +38,7 @@ jobs:
           sudo mv migrate.linux-amd64 /usr/bin/migrate
           which migrate
       - name: Run migrations
+        working-directory: ./server
         run: make migrateup
 
       # app
@@ -50,4 +51,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Tests and QC
+        working-directory: ./server
         run: bash scripts/test.sh
