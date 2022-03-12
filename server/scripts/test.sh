@@ -6,22 +6,8 @@ clear
 export MANDSENV="testing"
 export DATABASE_URL="postgresql://mands_user:mands_pw@localhost:5432/mands_db?sslmode=disable"
 
-# Correct directory?
-if  [ ! -f "./app/__init__.py" ]
-then
-    echo "You are not in the correct directory. Naviagte to mands/server/"
-    exit 1
-fi
 
-# Correct Python environment?
-if  [ ! -d "./env" ]
-then
-    echo "Did not find an virtual enviroment for Python under ./env/"
-    exit 1
-fi
-
-# Source python enviroment
-source env/bin/activate
+# Source python environment
 py_interpreter=$(which python)
 echo "Running Python from: $py_interpreter"
 
@@ -50,6 +36,11 @@ then
 fi
 
 
+# Security ------------------------------------------------
+
+bandit -r app/  --configfile bandit.yaml
+
+
 # Test ----------------------------------------------------
 
 python3 -m pytest --cov app/
@@ -58,8 +49,3 @@ if [ $? -eq 1 ]
 then
     exit 1
 fi
-
-
-# Security ------------------------------------------------
-
-bandit -r app/  --configfile bandit.yaml
