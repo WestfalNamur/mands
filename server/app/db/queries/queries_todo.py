@@ -1,6 +1,6 @@
 """Crud functions for todos table."""
 
-from typing import List, Union
+from typing import List, Optional
 
 from fastapi import HTTPException
 
@@ -30,7 +30,7 @@ async def create_todo(new_todo: NewTodo) -> Todo:
     return Todo(**todo)
 
 
-async def read_todo(todo_id: int) -> Union[Todo, None]:
+async def read_todo(todo_id: int) -> Optional[Todo]:
     query = "SELECT (id, user_id, content_text, done) FROM todo WHERE id = :id"
     row = await database.execute(query=query, values={"id": todo_id})
     if not row:
@@ -60,7 +60,7 @@ async def read_all_todo(limit_offset: LimitOffset) -> List[Todo]:
     return todos
 
 
-async def update_todo(new_todo: Todo) -> Union[Todo, None]:
+async def update_todo(new_todo: Todo) -> Optional[Todo]:
     todo = await read_todo(todo_id=new_todo.id)
     if not todo:
         return None

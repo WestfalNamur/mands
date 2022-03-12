@@ -1,6 +1,6 @@
 """Router for /todos resource."""
 
-from typing import List, Union
+from typing import List, Optional, Union
 
 from fastapi import APIRouter
 
@@ -23,7 +23,7 @@ async def post_todo(new_todo: NewTodo) -> Union[str, Todo]:
 
 
 @router_todos.get("/todos/{todo_id}")
-async def get_todo(todo_id: int) -> Union[Todo, None]:
+async def get_todo(todo_id: int) -> Optional[Todo]:
     return await read_todo(todo_id=todo_id)
 
 
@@ -35,7 +35,7 @@ async def get_all_todo(limit: int = 10, offset: int = 0) -> List[Todo]:
 
 
 @router_todos.put("/todos")
-async def put_todo(new_todo: Todo) -> Union[Todo, None]:
+async def put_todo(new_todo: Todo) -> Optional[Todo]:
     return await update_todo(new_todo=new_todo)
 
 
