@@ -1,6 +1,6 @@
 """Router for /users resource."""
 
-from typing import List, Union
+from typing import List, Optional, Union
 
 from fastapi import APIRouter
 
@@ -23,7 +23,7 @@ async def post_user(new_user: NewUser) -> Union[str, User]:
 
 
 @router_users.get("/users/{user_id}")
-async def get_user(user_id: int) -> Union[User, None]:
+async def get_user(user_id: int) -> Optional[User]:
     return await read_user(user_id=user_id)
 
 
@@ -33,7 +33,7 @@ async def get_all_user(limit_offset: LimitOffset) -> List[User]:
 
 
 @router_users.put("/users")
-async def put_user(new_data: User) -> Union[User, None]:
+async def put_user(new_data: User) -> Optional[User]:
     return await update_user_data(new_user_data=new_data)
 
 

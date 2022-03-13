@@ -1,6 +1,6 @@
 """Crud functions for user_data table."""
 
-from typing import List, Union
+from typing import List, Optional
 
 from fastapi import HTTPException
 
@@ -32,7 +32,7 @@ async def create_user(new_user: NewUser) -> User:
     return User(**user_data)
 
 
-async def read_user(user_id: int) -> Union[User, None]:
+async def read_user(user_id: int) -> Optional[User]:
     """Query to get single user_data by id."""
     query = "SELECT (id, user_name, user_password) FROM user_data WHERE id = :id"
     row = await database.execute(query=query, values={"id": user_id})
@@ -67,7 +67,7 @@ async def read_all_user(limit_offset: LimitOffset) -> List[User]:
     return lst_user_data
 
 
-async def update_user_data(new_user_data: User) -> Union[User, None]:
+async def update_user_data(new_user_data: User) -> Optional[User]:
     """Check if user exists and then update."""
     usr = await read_user(user_id=new_user_data.id)
     if not usr:
