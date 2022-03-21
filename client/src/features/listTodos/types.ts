@@ -5,6 +5,12 @@ export interface Todo {
   done: boolean
 }
 
+export interface NewTodo{
+  user_id: number
+  content_text: string
+  done: boolean
+}
+
 export function isTodo(todo: Todo): boolean {
   if (typeof todo.id !== "number") {
     return false
