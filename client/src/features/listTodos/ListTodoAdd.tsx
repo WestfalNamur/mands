@@ -3,11 +3,12 @@ import { Button, Divider, Input, List } from "antd";
 import { NewTodo } from "./types";
 import { useMutation } from "react-query";
 import styles from "./ListTodos.module.css";
+import { queryClient } from "../../pages/_app";
 
 export default function AddTodo() {
   const [text, setText] = useState("");
 
-  const mutation = useMutation((newTodo: NewTodo) => {
+  function postNewTodo(newTodo: NewTodo) {
     return fetch("http://localhost:8000/todos", {
       method: "POST",
       body: JSON.stringify(newTodo),
@@ -15,6 +16,12 @@ export default function AddTodo() {
         "Content-type": "application/json",
       },
     });
+  }
+
+  const mutation = useMutation(postNewTodo, {
+    onSuccess: (data, newTodo) => {
+      queryClient.setQueriesData(["todo", newTodo], data);
+    },
   });
 
   function handleClick() {
@@ -23,7 +30,12 @@ export default function AddTodo() {
       content_text: text,
       done: false,
     };
-    mutation.mutate(newTodo);
+    mutation.mutate(newTodo, {
+      // If successfully we invalidate all queries cached under key 'todos'.
+      onSuccess: () => {
+        queryClient.invalidateQueries("todos");
+      },
+    });
     setText("");
   }
 
